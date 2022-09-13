@@ -7,11 +7,10 @@ import LoadingLazy from "Components/LoadingLazy/LoadingLazy";
 import HomeTemplate from "Templates/HomeTemplate/HomeTemplate";
 import LoginTemplate from "Templates/LoginTemplate/LoginTemplate";
 import ProtectedLogin from "Routes/ProtectedLogin";
-import Halo from "Pages/Halo";
 import UserTemplate from "Templates/UserTemplate/UserTemplate";
-import Courses from "Pages/UserDetail/Courses";
-import AccountSecurity from "Pages/UserDetail/AccountSecurity";
-import EditProfile from "Pages/UserDetail/EditProfile";
+import EditProfile from "Pages/UserDetail/Profile/EditProfile";
+import Courses from "Pages/UserDetail/Courses/Courses";
+import AccountSecurity from "Pages/UserDetail/AccountSecurity/AccountSecurity";
 
 const HomePage = lazy(() => import("Pages/HomePage/HomePage"));
 const DetailPage = lazy(() => import("Pages/DetailPage/DetailPage"));
@@ -55,10 +54,6 @@ function App() {
         </BrowserRouter>
       </Suspense>
     </ErrorBoundary>
-    // <ThemeProvider theme={theme}>
-    //   <Halo />
-    //   <GlobalStyles />
-    // </ThemeProvider>
   );
 }
 

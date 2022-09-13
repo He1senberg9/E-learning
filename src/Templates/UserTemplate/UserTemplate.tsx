@@ -44,7 +44,7 @@ const UserTemplate = (props: Props) => {
               variant="h5"
               sx={{ fontWeight: 600, marginTop: "20px" }}
             >
-              Remy Sharp
+              Thái Tử Sang
             </Typography>
           </Box>
           <Box sx={{ width: "100%", bgcolor: "background.paper" }}>

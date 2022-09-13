@@ -68,16 +68,16 @@ export default function EditProfile() {
         <TextField
           required
           label="Account Name"
-          defaultValue="anhdecucde"
+          defaultValue="abcde"
           disabled
         />
-        <TextField required label="Name" defaultValue="Nguyen Duc Quang" />
+        <TextField required label="Name" defaultValue="Thái Tử Sang" />
         <TextField required label="Phone Number" defaultValue="0809756138" />
         <TextField
           // error
           required
           label="Email"
-          defaultValue="email@gmail.com"
+          defaultValue="sangnguyen1345@gmail.com"
         />
         <TextField
           // error
@@ -85,7 +85,6 @@ export default function EditProfile() {
           value={groupCurrency}
           onChange={handleGroupChange}
           label="Group Code"
-          defaultValue="email@gmail.com"
         >
           {groupCurrencies.map((item) => (
             <MenuItem key={item.value} value={item.value}>
@@ -99,7 +98,6 @@ export default function EditProfile() {
           value={roleCurrency}
           onChange={handleRoleChange}
           label="Role"
-          defaultValue="email@gmail.com"
         >
           {roleCurrencies.map((item) => (
             <MenuItem key={item.value} value={item.value}>

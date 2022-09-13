@@ -51,7 +51,7 @@ const AccountSecurity = (props: Props) => {
         </Typography>
         <MyPaper variant="outlined">
           <Typography sx={{ flexGrow: "1", marginLeft: "5px" }}>
-            Your email address is <b>lynguyencong2081999@gmail.com</b>
+            Your email address is <b>sangnguyen1345@gmail.com</b>
           </Typography>
           <Button variant="text">
             <EditIcon />

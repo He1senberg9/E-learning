@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import store from "configStore";
 
 const axiosClient = axios.create({
-  baseURL: "http://elearningnew.cybersoft.edu.vn/api",
+  baseURL: "https://elearningnew.cybersoft.edu.vn/api",
   headers: {
     TokenCybersoft:
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJGcm9udCBFbmQgNzEiLCJIZXRIYW5TdHJpbmciOiIyOS8xMi8yMDIyIiwiSGV0SGFuVGltZSI6IjE2NzIyNzIwMDAwMDAiLCJuYmYiOjE2NDU5ODEyMDAsImV4cCI6MTY3MjQxOTYwMH0.SZe3CJl1OkNH-0zfzqOV0CSC8WZ6q2hw64UykpCytT0",

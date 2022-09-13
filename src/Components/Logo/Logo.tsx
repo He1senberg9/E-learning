@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <Stack alignItems="center" justifyContent="center">
       <NavLink to={"/"} style={{ fontSize: "3rem", color: "#fff" }}>
-        Logo
+        E-learning
       </NavLink>
     </Stack>
   );
