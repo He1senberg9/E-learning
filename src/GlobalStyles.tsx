@@ -13,18 +13,17 @@ declare module "@mui/material/styles" {
 export const theme = createTheme({
   palette: {
     primary: {
+      light: "#83b9ff",
+      main: "#448aff",
+      dark: "#005ecb",
+      contrastText: "#fff",
+    },
+    secondary: {
       light: "#39316e",
       main: "#080b42",
       dark: "#00001e",
       contrastText: "#fff",
     },
-    secondary: {
-      light: "#ff8a50",
-      main: "#ff5722",
-      dark: "#c41c00",
-      contrastText: "#000",
-    },
-
     paper: { main: "#fdfcf0" },
     error: { main: "#e71a0f", dark: "#c0150c" },
   },

@@ -1,6 +1,7 @@
+import SlickCourse from "Components/SlickCourse/SlickCourse";
 import { Fragment, useEffect } from "react";
-import Banner from "./Banner/Banner";
-import CourseList from "./CourseList/CourseList";
+import Carousel from "./Carousel/Carousel";
+import Media from "./Media/Media";
 
 type Props = {};
 
@@ -10,8 +11,9 @@ const HomePage = (props: Props) => {
   }, []);
   return (
     <Fragment>
-      <Banner />
-      <CourseList />
+      <Carousel />
+      <SlickCourse />
+      <Media />
     </Fragment>
   );
 };

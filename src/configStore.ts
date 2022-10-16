@@ -1,13 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import courseSlice from "Slices/courseSlice";
-import userSlice from "Slices/userSlice";
-import authSlice from "Slices/authSlice";
+import course from "Slices/courseSlice";
+
 const store = configureStore({
-  reducer: { courseSlice, userSlice, authSlice },
+  reducer: { course },
 });
+export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
-
-export type AppDispatch = typeof store.dispatch;
-
-export default store;
+export type Dispatch = typeof store.dispatch;

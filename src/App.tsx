@@ -5,17 +5,25 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "Components/ErrorBoundary/ErrorBoundary";
 import LoadingLazy from "Components/LoadingLazy/LoadingLazy";
 import HomeTemplate from "Templates/HomeTemplate/HomeTemplate";
-import LoginTemplate from "Templates/LoginTemplate/LoginTemplate";
-import ProtectedLogin from "Routes/ProtectedLogin";
 import UserTemplate from "Templates/UserTemplate/UserTemplate";
-import EditProfile from "Pages/UserDetail/Profile/EditProfile";
-import Courses from "Pages/UserDetail/Courses/Courses";
-import AccountSecurity from "Pages/UserDetail/AccountSecurity/AccountSecurity";
 
 const HomePage = lazy(() => import("Pages/HomePage/HomePage"));
-const DetailPage = lazy(() => import("Pages/DetailPage/DetailPage"));
-const LoginPage = lazy(() => import("Pages/LoginPage/LoginPage"));
-const RegisterPage = lazy(() => import("Pages/RegisterPage/RegisterPage"));
+const EditProfile = lazy(
+  () => import("Pages/UserDetailPage/Profile/EditProfile")
+);
+const Courses = lazy(() => import("Pages/UserDetailPage/Courses/Courses"));
+const AccountSecurity = lazy(
+  () => import("Pages/UserDetailPage/AccountSecurity/AccountSecurity")
+);
+const CourseDetailPage = lazy(
+  () => import("Pages/CourseDetailPage/CourseDetailPage")
+);
+const CourseListPage = lazy(
+  () => import("Pages/CourseListPage/CourseListPage")
+);
+const CourseListByCatalogPage = lazy(
+  () => import("Pages/CourseListByCatalogPage/CourseListByCatalogPage")
+);
 
 function App() {
   return (
@@ -26,8 +34,13 @@ function App() {
             <Routes>
               <Route path="" element={<HomeTemplate />}>
                 <Route index element={<HomePage />} />
-                <Route path="detail/:courseId" element={<DetailPage />} />
-                <Route path="user" element={<UserTemplate />}>
+                <Route path="course-list" element={<CourseListPage />} />
+                <Route
+                  path="course-list/:catalogID"
+                  element={<CourseListByCatalogPage />}
+                />
+                <Route path="course-detail" element={<CourseDetailPage />} />
+                <Route path="user-detail" element={<UserTemplate />}>
                   <Route path="edit-profile" element={<EditProfile />} />
                   <Route path="courses" element={<Courses />} />
                   <Route
@@ -35,17 +48,6 @@ function App() {
                     element={<AccountSecurity />}
                   />
                 </Route>
-              </Route>
-              <Route path="/" element={<LoginTemplate />}>
-                <Route
-                  path="login"
-                  element={
-                    <ProtectedLogin>
-                      <LoginPage />
-                    </ProtectedLogin>
-                  }
-                />
-                <Route path="register" element={<RegisterPage />} />
               </Route>
               <Route path="*" element={<Navigate to={"/"} />} />
             </Routes>

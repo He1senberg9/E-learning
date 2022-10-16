@@ -17,6 +17,23 @@ type Props = {};
 
 const UserTemplate = (props: Props) => {
   const navigate = useNavigate();
+  const handleClick = (name: string) => {
+    let url = "";
+    switch (name) {
+      case "Profile":
+        url = "edit-profile";
+        break;
+      case "Account Security":
+        url = "account-security";
+        break;
+      case "Courses":
+        url = "courses";
+        break;
+      default:
+        break;
+    }
+    navigate(`/user-detail/${url}`);
+  };
   return (
     <Container fixed sx={{ margin: "50px auto" }}>
       <Grid container sx={{ border: 1 }}>
@@ -49,44 +66,23 @@ const UserTemplate = (props: Props) => {
           </Box>
           <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
             <List>
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => {
-                    navigate("/user/edit-profile");
-                  }}
-                >
-                  <ListItemIcon>
-                    <AccountBoxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Profile" />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => {
-                    navigate("/user/account-security");
-                  }}
-                >
-                  <ListItemIcon>
-                    <SecurityIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Account Security" />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => {
-                    navigate("/user/courses");
-                  }}
-                >
-                  <ListItemIcon>
-                    <SchoolIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Courses" />
-                </ListItemButton>
-              </ListItem>
+              {["Profile", "Account Security", "Courses"].map((item, index) => (
+                <>
+                  <Divider sx={{ display: index === 0 ? "none" : "block" }} />
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => {
+                        handleClick(item);
+                      }}
+                    >
+                      <ListItemIcon>
+                        <AccountBoxIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={item} />
+                    </ListItemButton>
+                  </ListItem>
+                </>
+              ))}
             </List>
           </Box>
         </Grid>

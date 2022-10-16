@@ -2,7 +2,7 @@ export interface CourseCatalog {
   maDanhMuc: string;
   tenDanhMuc: string;
 }
-export interface Course {
+export interface CourseDetail {
   maKhoaHoc: string;
   tenKhoaHoc: string;
   biDanh: string;
@@ -20,8 +20,12 @@ export interface Course {
     tenLoaiNguoiDung: string;
   };
 }
-
 export interface RegisterCourse {
   maKhoaHoc: string;
   taiKhoan: string;
+}
+export interface CourseState {
+  courseCatalogs: CourseCatalog[];
+  isCourseCatalogsLoading: boolean;
+  courseCatalogsError: undefined | string;
 }
