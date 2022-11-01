@@ -27,15 +27,22 @@ import {
 } from "./Header.styled";
 import { CourseCatalog } from "Interfaces/courseInterface";
 import { useNavigate } from "react-router-dom";
+import { dispatch, RootState } from "configStore";
+import { logout } from "Slices/authSlice";
+import { useSelector } from "react-redux";
 type Props = {
   courseCatalogs: CourseCatalog[];
 };
 const Header = ({ courseCatalogs }: Props) => {
   const theme = useTheme();
-  const [isLogin, setIsLogin] = useState(true);
+  const { user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const handleClick = (catalogID: string) => {
     navigate(`course-list/${catalogID}`);
+  };
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.setItem("user", "");
   };
 
   // ...menu...
@@ -69,7 +76,7 @@ const Header = ({ courseCatalogs }: Props) => {
         },
       }}
     >
-      {isLogin ? (
+      {user ? (
         <div>
           <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
           <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
@@ -174,30 +181,36 @@ const Header = ({ courseCatalogs }: Props) => {
           </Search>
           <Box
             sx={{
-              display: { xs: "none", md: isLogin ? "none" : "flex" },
+              display: { xs: "none", md: user ? "none" : "flex" },
               alignItems: "center",
             }}
           >
-            <StyledButton color="inherit">Log In</StyledButton>
-            <StyledButton color="inherit">Register</StyledButton>
+            <StyledButton color="inherit" onClick={() => navigate("/login")}>
+              Log In
+            </StyledButton>
+            <StyledButton color="inherit" onClick={() => navigate("/register")}>
+              Register
+            </StyledButton>
           </Box>
           <Box
             sx={{
-              display: { xs: "none", md: isLogin ? "flex" : "none" },
+              display: { xs: "none", md: user ? "flex" : "none" },
               alignItems: "center",
             }}
           >
-            <StyledButton color="inherit" sx={{ marginRight: "5px" }}>
-              {" "}
+            <StyledButton
+              color="inherit"
+              sx={{ marginRight: "5px" }}
+              onClick={() => navigate("/user-detail")}
+            >
               <Avatar
-                alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
+                alt={user?.hoTen}
+                src="https://i.pravatar.cc"
                 sx={{ marginRight: "10px" }}
-              />{" "}
-              Remy Sharp
+              />
+              {user?.hoTen}
             </StyledButton>
-            <StyledButton color="inherit">
-              {" "}
+            <StyledButton color="inherit" onClick={handleLogout}>
               <PowerSettingsNewIcon sx={{ marginRight: "5px" }} />
               Log Out
             </StyledButton>
@@ -209,12 +222,8 @@ const Header = ({ courseCatalogs }: Props) => {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              {isLogin ? (
-                <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
-                  sx={{}}
-                />
+              {user ? (
+                <Avatar alt={user?.hoTen} src="https://i.pravatar.cc" sx={{}} />
               ) : (
                 <AccountCircle sx={{ fontSize: "45px" }} />
               )}

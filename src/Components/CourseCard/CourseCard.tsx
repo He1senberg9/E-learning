@@ -11,37 +11,45 @@ import {
   Stack,
   styled,
 } from "@mui/material";
-
-const OverflowTypo = styled(Typography)({
+import { CourseDetail } from "Interfaces/courseInterface";
+import { useNavigate } from "react-router-dom";
+type Props = {
+  course: CourseDetail;
+};
+const Title = styled(Typography)({
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+});
+const Paragraph = styled(Typography)({
   display: "-webkit-box",
   WebkitLineClamp: "4",
   WebkitBoxOrient: "vertical",
   overflow: "hidden",
 });
-export default function CourseCard() {
+
+const CourseCard = ({ course }: Props) => {
+  const navigate = useNavigate();
   return (
-    <Card sx={{ maxWidth: 400 }}>
-      <CardActionArea>
+    <Card sx={{ maxWidth: 400, width: "100%" }}>
+      <CardActionArea
+        onClick={() => {
+          navigate(`/course-detail/${course.maKhoaHoc}`);
+        }}
+      >
         <CardMedia
           component="img"
           height="140"
-          image="https://mega.com.vn/media/news/1507_hinh-nen-luffy-gear-5-one-piece-cuc-ngau8.jpg"
-          alt="luffy-gear5"
+          image={course.hinhAnh}
+          alt="course-img"
         />
         <CardContent sx={{ height: "150px" }}>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            sx={{ textOverflow: "ellipsis", overflow: "hidden" }}
-          >
-            Luffy
-          </Typography>
-          <OverflowTypo variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica with over
-            6,000 species, ranging across all continents except Antar Antarctica
-          </OverflowTypo>
+          <Title gutterBottom variant="h6">
+            {course.tenKhoaHoc}
+          </Title>
+          <Paragraph variant="body2" color="text.secondary">
+            {course.moTa}
+          </Paragraph>
         </CardContent>
       </CardActionArea>
       <CardActions
@@ -51,7 +59,7 @@ export default function CourseCard() {
           variant="subtitle2"
           sx={{ color: "text.secondary", transform: "translateY(1px)" }}
         >
-          6.3k views
+          {course.luotXem} views
         </Typography>
         <Divider orientation="vertical" flexItem />
         <Stack spacing={1}>
@@ -66,4 +74,5 @@ export default function CourseCard() {
       </CardActions>
     </Card>
   );
-}
+};
+export default CourseCard;

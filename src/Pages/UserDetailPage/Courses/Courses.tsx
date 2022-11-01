@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect, useState, SyntheticEvent } from "react";
 import CourseCard from "Components/CourseCard/CourseCard";
 import { Grid, styled, Divider, Tabs, Tab, Box } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "configStore";
+import { CourseDetail } from "Interfaces/courseInterface";
+import courseAPI from "Services/CourseAPI";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,39 +54,53 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function Courses() {
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const [value, setValue] = useState(0);
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+  const { userDetail } = useSelector((state: RootState) => state.userDetail);
+  const [courseList, setCourseList] = useState<CourseDetail[]>([]);
+
+  useEffect(() => {
+    if (userDetail) {
+      const list = userDetail.chiTietKhoaHocGhiDanh.map((item) => {
+        return fetchCourse(item.maKhoaHoc);
+      });
+      Promise.all(list).then((value) => {
+        setCourseList(value);
+      });
+    }
+  }, [userDetail]);
+  const fetchCourse = async (courseID: string) => {
+    try {
+      const data = await courseAPI.getCourseDetail(courseID);
+      return data;
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
     <Box sx={{ width: "100%", maxHeight: "1000px", overflowY: "auto" }}>
       <Box>
         <StyledTabs value={value} onChange={handleChange}>
-          <StyledTab label="Unregistered Courses" />
-          <StyledTab label="Pending Courses" />
-          <StyledTab label="Approved Courses" />
+          <StyledTab label="Khóa học đã xét duyệt" />
+          <StyledTab label="Khóa học chưa ghi danh" />
+          <StyledTab label="Khóa học chờ xét duyệt" />
         </StyledTabs>
       </Box>
       <Divider />
-      <TabPanel value={value} index={0}></TabPanel>
-      <TabPanel value={value} index={1}></TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={0}>
         <Grid container>
-          <GridItem>
-            <CourseCard />
-          </GridItem>
-          <GridItem>
-            <CourseCard />
-          </GridItem>
-          <GridItem>
-            <CourseCard />
-          </GridItem>
-          <GridItem>
-            <CourseCard />
-          </GridItem>
+          {courseList?.map((item) => (
+            <GridItem>
+              <CourseCard course={item} />
+            </GridItem>
+          ))}
         </Grid>
       </TabPanel>
+      <TabPanel value={value} index={1}></TabPanel>
+      <TabPanel value={value} index={2}></TabPanel>
     </Box>
   );
 }

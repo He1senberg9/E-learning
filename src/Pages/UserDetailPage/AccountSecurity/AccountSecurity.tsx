@@ -9,22 +9,32 @@ import {
   styled,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import PasswordInput from "./PasswordInput";
+import PasswordInput from "Components/PasswordInput/PasswordInput";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import schema from "./schema";
 
 type Props = {};
+type PasswordForm = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 const MyPaper = styled(Paper)({
   display: "flex",
   alignItems: "center",
   width: "100%",
 });
-const MyStack = styled(Stack)({
-  padding: "20px 0",
-  overflowY: "auto",
-  width: "80%",
-  margin: "auto",
-});
-
 const AccountSecurity = (props: Props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PasswordForm>({
+    mode: "onSubmit",
+    resolver: yupResolver(schema),
+  });
+  const onSubmit = () => {};
   return (
     <>
       {" "}
@@ -32,8 +42,7 @@ const AccountSecurity = (props: Props) => {
         sx={{
           justifyContent: "center",
           flexDirection: "column",
-          paddingTop: "10px",
-          paddingBottom: "10px",
+          paddingY: 1,
         }}
       >
         <Typography variant="h5">Account</Typography>
@@ -42,7 +51,17 @@ const AccountSecurity = (props: Props) => {
         </Typography>
       </Toolbar>
       <Divider />
-      <MyStack alignItems="center">
+      <Stack
+        sx={{
+          m: "auto",
+          paddingY: 2,
+          overflowY: "auto",
+          width: "80%",
+        }}
+        alignItems="center"
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Typography
           variant="subtitle1"
           sx={{ alignSelf: "flex-start", marginBottom: "5px" }}
@@ -69,11 +88,29 @@ const AccountSecurity = (props: Props) => {
         >
           Change Password:
         </Typography>
-        <PasswordInput label="Current Password" />
-        <PasswordInput label="New Password" />
-        <PasswordInput label="Re-type New Password" />
-        <Button variant="contained">Save</Button>
-      </MyStack>
+
+        <PasswordInput
+          label="Mật khẩu hiện tại"
+          helperText={errors.currentPassword?.message}
+          error={!!errors.currentPassword}
+          register={register("currentPassword")}
+        />
+        <PasswordInput
+          label="Mật khẩu mới"
+          helperText={errors.newPassword?.message}
+          error={!!errors.newPassword}
+          register={register("newPassword")}
+        />
+        <PasswordInput
+          label="Nhập lại mật khẩu mới"
+          helperText={errors.confirmPassword?.message}
+          error={!!errors.confirmPassword}
+          register={register("confirmPassword")}
+        />
+        <Button type="submit" variant="contained">
+          Save
+        </Button>
+      </Stack>
     </>
   );
 };

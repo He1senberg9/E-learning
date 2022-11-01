@@ -1,48 +1,38 @@
-import React, { useEffect } from "react";
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { useNavigate, useParams } from "react-router-dom";
-import { Container, Avatar, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Container,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import SecurityIcon from "@mui/icons-material/Security";
+import SchoolIcon from "@mui/icons-material/School";
 import { useSelector } from "react-redux";
 import { RootState, dispatch } from "configStore";
 import { getUserDetail } from "Slices/userDetailSlice";
-import EditProfile from "Pages/UserDetailPage/Profile/EditProfile";
+import Profile from "Pages/UserDetailPage/Profile/Profile";
 import Courses from "Pages/UserDetailPage/Courses/Courses";
 import AccountSecurity from "Pages/UserDetailPage/AccountSecurity/AccountSecurity";
 
 type Props = {};
-
-const UserTemplate = (props: Props) => {
-  const { detailID = "" } = useParams();
+const UserDetailPage = (props: Props) => {
+  const tabList = ["Hồ Sơ", "Bảo mật tài khoản", "Các khóa học"];
+  const [detailID, setDetailID] = useState("Hồ Sơ");
   const { userDetail } = useSelector((state: RootState) => state.userDetail);
   useEffect(() => {
     dispatch(getUserDetail());
   }, []);
   console.log(userDetail);
-  const navigate = useNavigate();
-  const handleClick = (name: string) => {
-    let url = "";
-    switch (name) {
-      case "Profile":
-        url = "edit-profile";
-        break;
-      case "Account Security":
-        url = "account-security";
-        break;
-      case "Courses":
-        url = "courses";
-        break;
-      default:
-        break;
-    }
-    navigate(`/user-detail/${url}`);
+  const handleClick = (detailID: string) => {
+    setDetailID(detailID);
   };
   return (
     <Container fixed sx={{ margin: "50px auto" }}>
@@ -76,17 +66,23 @@ const UserTemplate = (props: Props) => {
           </Box>
           <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
             <List>
-              {["Profile", "Account Security", "Courses"].map((item, index) => (
+              {tabList.map((item, index) => (
                 <Box key={index}>
                   <Divider sx={{ display: index === 0 ? "none" : "block" }} />
                   <ListItem disablePadding>
                     <ListItemButton
-                      onClick={() => {
-                        handleClick(item);
+                      onClick={() => handleClick(item)}
+                      sx={{
+                        bgcolor:
+                          item === detailID
+                            ? "rgba(0, 0, 0, 0.1)"
+                            : "transparent",
                       }}
                     >
                       <ListItemIcon>
-                        <AccountBoxIcon />
+                        {index === 0 && <AccountBoxIcon />}
+                        {index === 1 && <SecurityIcon />}
+                        {index === 2 && <SchoolIcon />}
                       </ListItemIcon>
                       <ListItemText primary={item} />
                     </ListItemButton>
@@ -97,14 +93,14 @@ const UserTemplate = (props: Props) => {
           </Box>
         </Grid>
         <Grid xs={12} md={9}>
-          {detailID === "edit-profile" && <EditProfile />}
-          {detailID === "courses" && <Courses />}
-          {detailID === "account-security" && <AccountSecurity />}
+          {detailID === tabList[0] && <Profile />}
+          {detailID === tabList[1] && <AccountSecurity />}
+          {detailID === tabList[2] && <Courses />}
         </Grid>
       </Grid>
     </Container>
   );
 };
 
-export default UserTemplate;
+export default UserDetailPage;
 export {};

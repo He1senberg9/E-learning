@@ -2,8 +2,12 @@ import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import GrainIcon from "@mui/icons-material/Grain";
-import { Typography, Breadcrumbs, Link, styled } from "@mui/material";
-
+import { Typography, Breadcrumbs, styled, LinkProps } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
+import { CourseDetail } from "Interfaces/courseInterface";
+type Props = {
+  course: CourseDetail | undefined;
+};
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
   event.preventDefault();
   console.info("You clicked a breadcrumb.");
@@ -18,26 +22,30 @@ const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.main,
   },
 }));
-export default function IconBreadcrumbs() {
+const IconBreadcrumbs = ({ course }: Props) => {
+  const navigate = useNavigate();
   return (
     <div role="presentation" onClick={handleClick}>
       <Breadcrumbs separator="›" sx={{ color: "#fff" }}>
-        <StyledLink href="/">
+        <StyledLink to="/">
           <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
           E-learning
         </StyledLink>
-        <StyledLink href="/material-ui/getting-started/installation/">
+        <StyledLink
+          to={`/course-list/${course?.danhMucKhoaHoc.maDanhMucKhoahoc}`}
+        >
           <WhatshotIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-          Core
+          {course?.danhMucKhoaHoc.tenDanhMucKhoaHoc}
         </StyledLink>
         <Typography
           sx={{ display: "flex", alignItems: "center" }}
           color="primary.light"
         >
           <GrainIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-          Breadcrumb
+          {course?.tenKhoaHoc}
         </Typography>
       </Breadcrumbs>
     </div>
   );
-}
+};
+export default IconBreadcrumbs;

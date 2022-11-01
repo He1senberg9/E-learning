@@ -5,10 +5,17 @@ import CourseCard from "Components/CourseCard/CourseCard";
 import { Box, Container, Typography } from "@mui/material";
 import { PrevArrow, NextArrow } from "Components/Arrows/Arrows";
 import useWindowSize from "Hooks/useWindowSize";
+import { CourseDetail } from "Interfaces/courseInterface";
 
-type Props = {};
+type Props = {
+  courseList: CourseDetail[];
+  title?: string;
+};
 
-const SlickCourse = (props: Props) => {
+const SlickCourse = ({
+  courseList = [],
+  title = "Những khoá học nổi bật",
+}: Props) => {
   const [slidesToShow, setSlidesToShow] = useState<number>(4);
   const settings: Settings = {
     dots: true,
@@ -21,28 +28,30 @@ const SlickCourse = (props: Props) => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+  // Adjust the number of displayed CourseCard (slideToShow) to fit the current Width and length of the list (courseList)
   const { width } = useWindowSize();
   useEffect(() => {
+    const length = courseList.length;
     if (width < 600) {
       setSlidesToShow(1);
     } else if (width < 900) {
-      setSlidesToShow(2);
+      setSlidesToShow(length < 2 ? length : 2);
     } else if (width < 1200) {
-      setSlidesToShow(3);
+      setSlidesToShow(length < 3 ? length : 3);
     } else {
-      setSlidesToShow(4);
+      setSlidesToShow(length < 4 ? length : 4);
     }
-  }, [width]);
+  }, [width, courseList]);
 
   return (
     <Container sx={{ marginY: 5, width: "80vw" }}>
       <Typography variant="h3" sx={{ textAlign: "center" }}>
-        Khóa học mới nhất
+        {title}
       </Typography>
       <Slider {...settings}>
-        {[1, 2, 3, 4, 5, 6].map((item, index) => (
+        {courseList?.slice(0, 6).map((item, index) => (
           <Box key={index} sx={{ p: 2 }}>
-            <CourseCard />
+            <CourseCard course={item} />
           </Box>
         ))}
       </Slider>

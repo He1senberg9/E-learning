@@ -23,7 +23,7 @@
     //MUI
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
   },
   "include": [
     "src", "@types"

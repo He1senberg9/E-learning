@@ -2,15 +2,19 @@ export interface CourseCatalog {
   maDanhMuc: string;
   tenDanhMuc: string;
 }
-export interface CourseDetail {
+export interface Course {
   maKhoaHoc: string;
   tenKhoaHoc: string;
+}
+
+export interface CourseDetail {
+  maKhoaHoc: string;
   biDanh: string;
-  danhMucKhoaHoc: { maDanhMucKhoahoc: string; tenDanhMucKhoaHoc: string };
+  tenKhoaHoc: string;
+  moTa: string;
   hinhAnh: string;
   luotXem: number;
   maNhom: string;
-  moTa: string;
   ngayTao: string;
   soLuongHocVien: string;
   nguoiTao: {
@@ -19,6 +23,7 @@ export interface CourseDetail {
     maLoaiNguoiDung: string;
     tenLoaiNguoiDung: string;
   };
+  danhMucKhoaHoc: { maDanhMucKhoahoc: string; tenDanhMucKhoaHoc: string };
 }
 export interface RegisterCourse {
   maKhoaHoc: string;

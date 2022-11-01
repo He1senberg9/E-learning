@@ -1,15 +1,30 @@
 import React, { useState } from "react";
 import {
   FormControl,
+  FormHelperText,
   InputLabel,
   OutlinedInput,
   InputAdornment,
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-type Props = { label: string };
+import { UseFormRegisterReturn } from "react-hook-form";
+type Props = {
+  label: string;
+  width?: string;
+  helperText?: string;
+  error?: boolean;
+  register?: UseFormRegisterReturn;
+};
 
-const PasswordInput = ({ label }: Props) => {
+const PasswordInput = (props: Props) => {
+  const {
+    label,
+    width = "100%",
+    helperText = "",
+    error = false,
+    register = {},
+  } = props;
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword((showPassword) => !showPassword);
@@ -21,14 +36,13 @@ const PasswordInput = ({ label }: Props) => {
   };
 
   return (
-    <FormControl
-      sx={{ width: "100%", marginBottom: "20px" }}
-      variant="outlined"
-    >
-      <InputLabel>{label}</InputLabel>
+    <FormControl sx={{ width: width, marginY: 1 }} variant="outlined">
+      <InputLabel error={error}>{label}</InputLabel>
       <OutlinedInput
-        id="outlined-adornment-password"
+        {...register}
+        error={error}
         type={showPassword ? "text" : "password"}
+        autoComplete="on"
         // value={values.password}
         // onChange={handleChange("password")}
         endAdornment={
@@ -44,6 +58,7 @@ const PasswordInput = ({ label }: Props) => {
         }
         label={label}
       />
+      <FormHelperText error={error}>{helperText}</FormHelperText>
     </FormControl>
   );
 };

@@ -5,15 +5,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "Components/ErrorBoundary/ErrorBoundary";
 import LoadingLazy from "Components/LoadingLazy/LoadingLazy";
 import HomeTemplate from "Templates/HomeTemplate/HomeTemplate";
-import UserTemplate from "Templates/UserTemplate/UserTemplate";
-
 const HomePage = lazy(() => import("Pages/HomePage/HomePage"));
-const EditProfile = lazy(
-  () => import("Pages/UserDetailPage/Profile/EditProfile")
-);
-const Courses = lazy(() => import("Pages/UserDetailPage/Courses/Courses"));
-const AccountSecurity = lazy(
-  () => import("Pages/UserDetailPage/AccountSecurity/AccountSecurity")
+const UserDetailPage = lazy(
+  () => import("Pages/UserDetailPage/UserDetailPage")
 );
 const CourseDetailPage = lazy(
   () => import("Pages/CourseDetailPage/CourseDetailPage")
@@ -24,6 +18,8 @@ const CourseListPage = lazy(
 const CourseListByCatalogPage = lazy(
   () => import("Pages/CourseListByCatalogPage/CourseListByCatalogPage")
 );
+const LoginPage = lazy(() => import("Pages/LoginPage/LoginPage"));
+const RegisterPage = lazy(() => import("Pages/RegisterPage/RegisterPage"));
 
 function App() {
   return (
@@ -39,15 +35,21 @@ function App() {
                   path="course-list/:catalogID"
                   element={<CourseListByCatalogPage />}
                 />
-                <Route path="course-detail" element={<CourseDetailPage />} />
-                <Route path="user-detail" element={<UserTemplate />}>
-                  <Route path="edit-profile" element={<EditProfile />} />
+                <Route
+                  path="course-detail/:courseID"
+                  element={<CourseDetailPage />}
+                />
+                <Route path="user-detail" element={<UserDetailPage />}>
+                  {/* <Route path="user-detail:detailID" element={<UserTemplate />}> */}
+                  {/* <Route path="edit-profile" element={<EditProfile />} />
                   <Route path="courses" element={<Courses />} />
                   <Route
                     path="account-security"
                     element={<AccountSecurity />}
-                  />
+                  /> */}
                 </Route>
+                <Route path="login" element={<LoginPage />} />
+                <Route path="register" element={<RegisterPage />} />
               </Route>
               <Route path="*" element={<Navigate to={"/"} />} />
             </Routes>

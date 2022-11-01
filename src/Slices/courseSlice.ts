@@ -7,12 +7,12 @@ const initialState: CourseState = {
   isCourseCatalogsLoading: false,
   courseCatalogsError: undefined,
 };
-
 const courseSlice = createSlice({
   name: "course",
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // CourseCatalogs
     builder.addCase(getCourseCatalogs.pending, (state) => {
       state.isCourseCatalogsLoading = true;
     });
