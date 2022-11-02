@@ -39,17 +39,20 @@ export const postLogin = createAsyncThunk(
   "user/login",
   async (payload: LoginValues, {}) => {
     try {
-      const data = await userAPI.login(payload);
+      const data = await userAPI.postLogin(payload);
       localStorage.setItem("user", JSON.stringify(data));
-
       return data;
     } catch (error) {
       throw error;
     }
   }
 );
-export const logout = createAsyncThunk("user/logout", (payload, { dispatch }) =>
-  dispatch(clearUserDetail())
+export const logout = createAsyncThunk(
+  "user/logout",
+  (payload, { dispatch }) => {
+    localStorage.setItem("user", "");
+    dispatch(clearUserDetail());
+  }
 );
 // export const { logout } = authSlice.actions;
 export default authSlice.reducer;

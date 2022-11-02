@@ -1,11 +1,13 @@
 import React, { useEffect, useState, SyntheticEvent } from "react";
 import CourseCard from "Components/CourseCard/CourseCard";
 import { Grid, styled, Divider, Tabs, Tab, Box } from "@mui/material";
-import { useSelector } from "react-redux";
-import { RootState } from "configStore";
 import { CourseDetail } from "Interfaces/courseInterface";
 import courseAPI from "Services/CourseAPI";
+import { UserDetail } from "Interfaces/userInterface";
 
+type Props = {
+  userDetail: UserDetail | null;
+};
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -53,12 +55,11 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export default function Courses() {
+const Courses = ({ userDetail }: Props) => {
   const [value, setValue] = useState(0);
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const { userDetail } = useSelector((state: RootState) => state.userDetail);
   const [courseList, setCourseList] = useState<CourseDetail[]>([]);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export default function Courses() {
       <TabPanel value={value} index={0}>
         <Grid container>
           {courseList?.map((item) => (
-            <GridItem>
+            <GridItem key={item.maKhoaHoc}>
               <CourseCard course={item} />
             </GridItem>
           ))}
@@ -103,4 +104,5 @@ export default function Courses() {
       <TabPanel value={value} index={2}></TabPanel>
     </Box>
   );
-}
+};
+export default Courses;

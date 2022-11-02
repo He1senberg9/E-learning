@@ -21,6 +21,7 @@ import { getUserDetail } from "Slices/userDetailSlice";
 import Profile from "Pages/UserDetailPage/Profile/Profile";
 import Courses from "Pages/UserDetailPage/Courses/Courses";
 import AccountSecurity from "Pages/UserDetailPage/AccountSecurity/AccountSecurity";
+import avatar from "Assets/img/Avatar/avatar.jpg";
 
 type Props = {};
 const UserDetailPage = (props: Props) => {
@@ -30,7 +31,6 @@ const UserDetailPage = (props: Props) => {
   useEffect(() => {
     dispatch(getUserDetail());
   }, []);
-  console.log(userDetail);
   const handleClick = (detailID: string) => {
     setDetailID(detailID);
   };
@@ -53,7 +53,7 @@ const UserDetailPage = (props: Props) => {
           <Box sx={{ padding: "40px 0" }}>
             <Avatar
               alt={userDetail?.hoTen}
-              src="https://i.pravatar.cc"
+              src={avatar}
               sx={{ width: 150, height: 150, margin: "0 auto" }}
             />
             <Typography
@@ -93,9 +93,11 @@ const UserDetailPage = (props: Props) => {
           </Box>
         </Grid>
         <Grid xs={12} md={9}>
-          {detailID === tabList[0] && <Profile />}
-          {detailID === tabList[1] && <AccountSecurity />}
-          {detailID === tabList[2] && <Courses />}
+          {detailID === tabList[0] && <Profile userDetail={userDetail} />}
+          {detailID === tabList[1] && (
+            <AccountSecurity userDetail={userDetail} />
+          )}
+          {detailID === tabList[2] && <Courses userDetail={userDetail} />}
         </Grid>
       </Grid>
     </Container>

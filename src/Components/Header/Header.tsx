@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -25,25 +25,32 @@ import {
   StyledInputBase,
   StyledButton,
 } from "./Header.styled";
+import avatar from "Assets/img/Avatar/avatar.jpg";
 import { CourseCatalog } from "Interfaces/courseInterface";
 import { useNavigate } from "react-router-dom";
 import { dispatch, RootState } from "configStore";
 import { logout } from "Slices/authSlice";
 import { useSelector } from "react-redux";
+import { getUserDetail } from "Slices/userDetailSlice";
 type Props = {
   courseCatalogs: CourseCatalog[];
 };
 const Header = ({ courseCatalogs }: Props) => {
   const theme = useTheme();
   const { user } = useSelector((state: RootState) => state.auth);
+  const name = useSelector(
+    (state: RootState) => state.userDetail.userDetail?.hoTen
+  );
   const navigate = useNavigate();
   const handleClick = (catalogID: string) => {
     navigate(`course-list/${catalogID}`);
   };
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.setItem("user", "");
   };
+  useEffect(() => {
+    dispatch(getUserDetail());
+  }, []);
 
   // ...menu...
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -51,8 +58,24 @@ const Header = ({ courseCatalogs }: Props) => {
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleMenuClose = () => {
+  const handleMenuClose = (name: string) => {
     setAnchorEl(null);
+    switch (name) {
+      case "Profile":
+        navigate("/user-detail");
+        break;
+      case "Log Out":
+        handleLogout();
+        break;
+      case "Log In":
+        navigate("/login");
+        break;
+      case "Register":
+        navigate("/register");
+        break;
+      default:
+        break;
+    }
   };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -78,13 +101,19 @@ const Header = ({ courseCatalogs }: Props) => {
     >
       {user ? (
         <div>
-          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+          <MenuItem onClick={() => handleMenuClose("Profile")}>
+            Profile
+          </MenuItem>
+          <MenuItem onClick={() => handleMenuClose("Log Out")}>
+            Log Out
+          </MenuItem>
         </div>
       ) : (
         <div>
-          <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Register</MenuItem>
+          <MenuItem onClick={() => handleMenuClose("Log In")}>Log In</MenuItem>
+          <MenuItem onClick={() => handleMenuClose("Register")}>
+            Register
+          </MenuItem>
         </div>
       )}
     </Menu>
@@ -179,9 +208,10 @@ const Header = ({ courseCatalogs }: Props) => {
             </SearchIconWrapper>
             <StyledInputBase placeholder="Search…" />
           </Search>
+          {/* Showed for big screen,  not logged in*/}
           <Box
             sx={{
-              display: { xs: "none", md: user ? "none" : "flex" },
+              display: { xs: "none", md: !user ? "flex" : "none" },
               alignItems: "center",
             }}
           >
@@ -192,6 +222,7 @@ const Header = ({ courseCatalogs }: Props) => {
               Register
             </StyledButton>
           </Box>
+          {/* Showed for big screen, logged in*/}
           <Box
             sx={{
               display: { xs: "none", md: user ? "flex" : "none" },
@@ -203,18 +234,15 @@ const Header = ({ courseCatalogs }: Props) => {
               sx={{ marginRight: "5px" }}
               onClick={() => navigate("/user-detail")}
             >
-              <Avatar
-                alt={user?.hoTen}
-                src="https://i.pravatar.cc"
-                sx={{ marginRight: "10px" }}
-              />
-              {user?.hoTen}
+              <Avatar alt={name} src={avatar} sx={{ marginRight: "10px" }} />
+              {name}
             </StyledButton>
             <StyledButton color="inherit" onClick={handleLogout}>
               <PowerSettingsNewIcon sx={{ marginRight: "5px" }} />
               Log Out
             </StyledButton>
           </Box>
+          {/* Showed for small screen */}
           <Box sx={{ display: { xs: "block", md: "none" } }}>
             <IconButton
               size="large"
@@ -223,7 +251,7 @@ const Header = ({ courseCatalogs }: Props) => {
               color="inherit"
             >
               {user ? (
-                <Avatar alt={user?.hoTen} src="https://i.pravatar.cc" sx={{}} />
+                <Avatar alt={name} src={avatar} sx={{}} />
               ) : (
                 <AccountCircle sx={{ fontSize: "45px" }} />
               )}

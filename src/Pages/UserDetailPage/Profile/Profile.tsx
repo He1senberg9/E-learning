@@ -1,95 +1,97 @@
-import * as React from "react";
+import React, { useEffect, useMemo, forwardRef, useState } from "react";
 import {
   TextField,
   Divider,
-  MenuItem,
   Stack,
   Toolbar,
   Typography,
   Button,
 } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import schema from "./schema";
-
-type Props = {};
-type profileForm = {
+import { UserDetail, UserToPut } from "Interfaces/userInterface";
+import userAPI from "Services/UserAPI";
+import { dispatch } from "configStore";
+import { getUserDetail } from "Slices/userDetailSlice";
+import CustomizedSnackbars from "Components/CustomizedSnackbars/CustomizedSnackbars";
+type Props = { userDetail: UserDetail | null };
+type ProfileForm = {
   userName: string;
   name: string;
-  email: string;
   phoneNumber: string;
   groupCode: string;
-  role: string;
 };
-type inputName = "userName" | "name" | "email" | "phoneNumber";
-const groupCurrencies = [
-  {
-    label: "Group 1",
-    value: "GP01",
-  },
-  {
-    label: "Group 2",
-    value: "GP02",
-  },
-];
-const roleCurrencies = [
-  {
-    label: "Teacher",
-    value: "GV",
-  },
-  {
-    label: "Student",
-    value: "HV",
-  },
-];
-const Profile = (props: Props) => {
-  // MUI
-  const [groupCurrency, setGroupCurrency] = React.useState("GP01");
-  const [roleCurrency, setRoleCurrency] = React.useState("HV");
-  const handleGroupChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGroupCurrency(event.target.value);
+type InputName = "userName" | "name" | "phoneNumber" | "groupCode";
+const Profile = ({ userDetail }: Props) => {
+  const [open, setOpen] = useState(false);
+  const mapData = () => {
+    const user = {
+      userName: userDetail?.taiKhoan,
+      name: userDetail?.hoTen,
+      phoneNumber: userDetail?.soDT,
+      groupCode: userDetail?.maNhom,
+    };
+    return user;
   };
-  const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRoleCurrency(event.target.value);
-  };
-
-  // useForm
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
-  } = useForm<profileForm>({
-    mode: "onTouched",
+    reset,
+  } = useForm<ProfileForm>({
+    defaultValues: useMemo(() => mapData(), [userDetail]),
+    mode: "onSubmit",
     resolver: yupResolver(schema),
   });
   const inputs: Array<{
-    inputName: inputName;
+    inputName: InputName;
     label: string;
-    defaultValue: string;
   }> = [
     {
       inputName: "userName",
-      label: "Account Name",
-      defaultValue: "abcde",
+      label: "Tên tài khoản",
     },
     {
       inputName: "name",
-      label: "Name",
-      defaultValue: "Duc Quang",
-    },
-    {
-      inputName: "email",
-      label: "Email",
-      defaultValue: "hello@gmail.com",
+      label: "Họ và tên",
     },
     {
       inputName: "phoneNumber",
-      label: "Phone Number",
-      defaultValue: "090938398",
+      label: "Số điện thoại",
+    },
+    {
+      inputName: "groupCode",
+      label: "Mã nhóm",
     },
   ];
-  const onSubmit = () => {};
+
+  const onSubmit = (form: ProfileForm) => {
+    if (userDetail) {
+      const user: UserToPut = {
+        taiKhoan: form.userName,
+        matKhau: userDetail.matKhau,
+        hoTen: form.name,
+        soDT: form.phoneNumber,
+        maLoaiNguoiDung: "HV",
+        maNhom: form.groupCode,
+        email: userDetail.email,
+      };
+      putUser(user);
+    }
+  };
+  const putUser = async (user: UserToPut) => {
+    try {
+      await userAPI.putUser(user);
+      dispatch(getUserDetail());
+      setOpen(true);
+    } catch (error) {
+      throw error;
+    }
+  };
+  useEffect(() => {
+    reset(mapData());
+  }, [userDetail]);
   return (
     <>
       <Toolbar
@@ -99,8 +101,8 @@ const Profile = (props: Props) => {
           paddingY: 1,
         }}
       >
-        <Typography variant="h5">Public Profile</Typography>
-        <Typography variant="body1">Add information about yourself</Typography>
+        <Typography variant="h5">Hồ sơ công khai</Typography>
+        <Typography variant="body1">Thêm thông tin về bạn</Typography>
       </Toolbar>
       <Divider />
       <Stack
@@ -115,56 +117,24 @@ const Profile = (props: Props) => {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {inputs.map(({ inputName, label, defaultValue }) => (
+        {inputs.map(({ inputName, label }) => (
           <TextField
+            key={inputName}
             label={label}
             error={!!errors[inputName]}
             helperText={errors[inputName]?.message}
-            defaultValue={defaultValue}
+            defaultValue="0"
             disabled={inputName === "userName"}
             {...register(inputName)}
           />
         ))}
-        <Controller
-          name="groupCode"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              select
-              value={groupCurrency}
-              onChange={handleGroupChange}
-              label="Group Code"
-            >
-              {groupCurrencies.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
-        />
-        <Controller
-          name="role"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              select
-              value={roleCurrency}
-              onChange={handleRoleChange}
-              label="Role"
-            >
-              {roleCurrencies.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
+        <CustomizedSnackbars
+          message="Cập nhật hồ sơ thành công!"
+          open={open}
+          setOpen={setOpen}
         />
         <Button type="submit" sx={{ mt: 2 }} variant="contained">
-          Save
+          Cập nhật
         </Button>
       </Stack>
     </>
