@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Container,
@@ -7,12 +7,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import schema from "./schema";
 import PasswordInput from "Components/PasswordInput/PasswordInput";
+import userAPI from "Services/UserAPI";
+import { LoginValues, RegisterValues } from "Interfaces/userInterface";
+import { dispatch, RootState } from "configStore";
+import { postLogin } from "Slices/authSlice";
+import { useSelector } from "react-redux";
 
 type Props = {};
 type registerForm = {
@@ -40,6 +45,8 @@ const inputs: Array<{ inputName: inputName; label: string }> = [
   },
 ];
 const RegisterPage = (props: Props) => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -48,12 +55,40 @@ const RegisterPage = (props: Props) => {
     mode: "onTouched",
     resolver: yupResolver(schema),
   });
-
+  const onSuccess = (values: registerForm) => {
+    const payload: RegisterValues = {
+      email: values.email,
+      hoTen: values.name,
+      maNhom: "GP01",
+      matKhau: values.password,
+      soDT: values.phoneNumber,
+      taiKhoan: values.userName,
+    };
+    postRegister(payload);
+  };
+  const postRegister = async (payload: RegisterValues) => {
+    try {
+      const data = await userAPI.postRegister(payload);
+      const loginValue: LoginValues = {
+        taiKhoan: data.taiKhoan,
+        matKhau: data.matKhau,
+      };
+      dispatch(postLogin(loginValue));
+    } catch (error) {
+      throw error;
+    }
+  };
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
   return (
     <Container sx={{ p: 5 }}>
       <Stack
         component="form"
         alignItems="center"
+        onSubmit={handleSubmit(onSuccess)}
         sx={{
           maxWidth: "500px",
           marginX: "auto",

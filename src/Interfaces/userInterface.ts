@@ -10,8 +10,7 @@ export interface RegisterValues {
   hoTen: string;
   soDT: string;
   email: string;
-  maNhom?: string;
-  passwordConfirm?: string;
+  maNhom: string;
 }
 export interface User {
   taiKhoan: string;

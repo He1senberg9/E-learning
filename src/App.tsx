@@ -13,6 +13,8 @@ import UserDetailPage from "Pages/UserDetailPage/UserDetailPage";
 import CourseDetailPage from "Pages/CourseDetailPage/CourseDetailPage";
 import CourseListPage from "Pages/CourseListPage/CourseListPage";
 import CourseListByCatalogPage from "Pages/CourseListByCatalogPage/CourseListByCatalogPage";
+import ProtectedLogin from "Routes/ProtectedLogin";
+import ProtectedUserDetail from "Routes/ProtectedUserDetail";
 
 // const HomePage = lazy(() => import("Pages/HomePage/HomePage"));
 // const UserDetailPage = lazy(
@@ -48,17 +50,30 @@ function App() {
                   path="course-detail/:courseID"
                   element={<CourseDetailPage />}
                 />
-                <Route path="user-detail" element={<UserDetailPage />}>
-                  {/* <Route path="user-detail:detailID" element={<UserTemplate />}> */}
-                  {/* <Route path="edit-profile" element={<EditProfile />} />
-                  <Route path="courses" element={<Courses />} />
-                  <Route
-                    path="account-security"
-                    element={<AccountSecurity />}
-                  /> */}
-                </Route>
-                <Route path="login" element={<LoginPage />} />
-                <Route path="register" element={<RegisterPage />} />
+                <Route
+                  path="user-detail"
+                  element={
+                    <ProtectedUserDetail>
+                      <UserDetailPage />
+                    </ProtectedUserDetail>
+                  }
+                />
+                <Route
+                  path="login"
+                  element={
+                    <ProtectedLogin>
+                      <LoginPage />
+                    </ProtectedLogin>
+                  }
+                />
+                <Route
+                  path="register"
+                  element={
+                    <ProtectedLogin>
+                      <RegisterPage />
+                    </ProtectedLogin>
+                  }
+                />
               </Route>
               <Route path="*" element={<Navigate to={"/"} />} />
             </Routes>

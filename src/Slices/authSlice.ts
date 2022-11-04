@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { LoginValues } from "Interfaces/userInterface";
+import { LoginValues, RegisterValues } from "Interfaces/userInterface";
 import userAPI from "Services/UserAPI";
 import { UserState } from "Interfaces/userInterface";
 import { clearUserDetail } from "./userDetailSlice";
@@ -36,7 +36,7 @@ const authSlice = createSlice({
 });
 
 export const postLogin = createAsyncThunk(
-  "user/login",
+  "auth/login",
   async (payload: LoginValues, {}) => {
     try {
       const data = await userAPI.postLogin(payload);
@@ -47,12 +47,22 @@ export const postLogin = createAsyncThunk(
     }
   }
 );
+// export const postRegister = createAsyncThunk(
+//   "auth/register",
+//   async (payload: RegisterValues) => {
+//     try {
+//       const data = await userAPI.postRegister(payload);
+//       return data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+// );
 export const logout = createAsyncThunk(
-  "user/logout",
+  "auth/logout",
   (payload, { dispatch }) => {
     localStorage.setItem("user", "");
     dispatch(clearUserDetail());
   }
 );
-// export const { logout } = authSlice.actions;
 export default authSlice.reducer;

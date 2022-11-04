@@ -164,7 +164,7 @@ const AccountSecurity = ({ userDetail }: Props) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Đóng</Button>
-            <Button onClick={handleUpdateEmail}>Lưu</Button>
+            <Button onClick={handleUpdateEmail}>Cập nhật</Button>
           </DialogActions>
         </Dialog>
         <Divider

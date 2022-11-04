@@ -1,5 +1,6 @@
 import {
   LoginValues,
+  RegisterValues,
   User,
   UserDetail,
   UserToPut,
@@ -9,6 +10,11 @@ import axiosClient from "./axiosClient";
 const userAPI = {
   postLogin: (payload: LoginValues) => {
     return axiosClient.post<User>("QuanLyNguoiDung/DangNhap", {
+      ...payload,
+    });
+  },
+  postRegister: (payload: RegisterValues) => {
+    return axiosClient.post<RegisterValues>("QuanLyNguoiDung/DangKy", {
       ...payload,
     });
   },

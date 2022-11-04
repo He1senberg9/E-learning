@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -17,10 +17,12 @@ import { LoginValues } from "Interfaces/userInterface";
 import { postLogin } from "Slices/authSlice";
 import { dispatch, RootState } from "configStore";
 import { useSelector } from "react-redux";
+import CustomizedSnackbars from "Components/CustomizedSnackbars/CustomizedSnackbars";
 
 type Props = {};
 
 const LoginPage = (props: Props) => {
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
   const {
@@ -32,7 +34,11 @@ const LoginPage = (props: Props) => {
     resolver: yupResolver(schema),
   });
   const onSubmit = (value: LoginValues) => {
-    dispatch(postLogin(value));
+    dispatch(postLogin(value)).then((res: any) => {
+      if (res?.error?.message) {
+        setIsError(true);
+      }
+    });
   };
   useEffect(() => {
     if (user) {
@@ -70,6 +76,12 @@ const LoginPage = (props: Props) => {
           Đăng nhập
         </Button>
         <Link to="/register">Bạn chưa có tài khoản? Đăng ký</Link>
+        <CustomizedSnackbars
+          message="Đăng nhập thất bại"
+          open={isError}
+          setOpen={setIsError}
+          severity="error"
+        />
       </Stack>
     </Container>
   );
