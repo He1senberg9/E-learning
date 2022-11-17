@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -18,6 +18,8 @@ import { LoginValues, RegisterValues } from "Interfaces/userInterface";
 import { dispatch, RootState } from "configStore";
 import { postLogin } from "Slices/authSlice";
 import { useSelector } from "react-redux";
+import CustomizedSnackbars from "Components/CustomizedSnackbars/CustomizedSnackbars";
+import axios, { AxiosError } from "axios";
 
 type Props = {};
 type registerForm = {
@@ -45,6 +47,8 @@ const inputs: Array<{ inputName: inputName; label: string }> = [
   },
 ];
 const RegisterPage = (props: Props) => {
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<any>("");
   const user = useSelector((state: RootState) => state.auth.user);
   const navigate = useNavigate();
   const {
@@ -75,6 +79,10 @@ const RegisterPage = (props: Props) => {
       };
       dispatch(postLogin(loginValue));
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data);
+      }
+      setIsError(true);
       throw error;
     }
   };
@@ -123,6 +131,12 @@ const RegisterPage = (props: Props) => {
           Đăng ký
         </Button>
         <Link to="/login">Bạn đã có tài khoản? Đăng nhập</Link>
+        <CustomizedSnackbars
+          message={errorMessage}
+          open={isError}
+          setOpen={setIsError}
+          severity="error"
+        />
       </Stack>
     </Container>
   );

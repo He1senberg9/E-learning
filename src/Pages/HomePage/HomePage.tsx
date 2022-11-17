@@ -2,25 +2,16 @@ import { Fragment, useEffect, useState } from "react";
 import SlickCourse from "Components/SlickCourse/SlickCourse";
 import Carousel from "./Carousel/Carousel";
 import Media from "./Media/Media";
-import courseAPI from "Services/CourseAPI";
-import { CourseDetail } from "Interfaces/courseInterface";
+import { useSelector } from "react-redux";
+import { RootState } from "configStore";
 
 type Props = {};
 
 const HomePage = (props: Props) => {
-  const [courseList, setCourseList] = useState<CourseDetail[]>([]);
   useEffect(() => {
     document.title = "Trang chủ";
-    fetchData();
   }, []);
-  const fetchData = async () => {
-    try {
-      const data = await courseAPI.getCourseList();
-      setCourseList(data);
-    } catch (error) {
-      throw error;
-    }
-  };
+  const { courseList } = useSelector((state: RootState) => state.course);
   return (
     <Fragment>
       <Carousel />

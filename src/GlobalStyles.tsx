@@ -28,7 +28,6 @@ export const theme = createTheme({
     error: { main: "#e71a0f", dark: "#c0150c" },
   },
 });
-
 const GlobalStyles = createGlobalStyle`
   * {
   margin: 0;

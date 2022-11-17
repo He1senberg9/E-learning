@@ -2,8 +2,8 @@ import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import GrainIcon from "@mui/icons-material/Grain";
-import { Typography, Breadcrumbs, styled, LinkProps } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { Typography, Breadcrumbs, styled } from "@mui/material";
+import { Link } from "react-router-dom";
 import { CourseDetail } from "Interfaces/courseInterface";
 type Props = {
   course: CourseDetail | undefined;
@@ -23,7 +23,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 const IconBreadcrumbs = ({ course }: Props) => {
-  const navigate = useNavigate();
   return (
     <div role="presentation" onClick={handleClick}>
       <Breadcrumbs separator="›" sx={{ color: "#fff" }}>

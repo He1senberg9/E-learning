@@ -112,7 +112,7 @@ const CourseMain = ({ course }: Props) => {
     <>
       <StyledBox>
         <IconBreadcrumbs course={course} />
-        <Container>
+        <Container sx={{ paddingBottom: 3 }}>
           <Grid container>
             <GridItem1 xs={12} md={8}>
               <Typography variant="h3" sx={{ textTransform: "uppercase" }}>

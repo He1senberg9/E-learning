@@ -1,6 +1,5 @@
-import { Container } from "@mui/system";
 import { Component, ErrorInfo, ReactNode } from "react";
-import maintenance from "Assets/img/Error/maintenance.jpg";
+import errorImg from "Assets/img/Error/error.jpg";
 interface Props {
   children?: ReactNode;
 }
@@ -29,16 +28,15 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <Container>
+        <div style={{ textAlign: "center" }}>
           <img
-            src={maintenance}
-            alt={maintenance}
-            style={{ height: "100%", width: "100%" }}
+            src={errorImg}
+            alt="errorImg"
+            style={{ height: "90vh", width: "90vw", objectFit: "contain" }}
           />
-        </Container>
+        </div>
       );
     }
-
     return this.props.children;
   }
 }

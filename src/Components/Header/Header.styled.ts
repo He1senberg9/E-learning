@@ -21,13 +21,15 @@ export const Search = styled("div")(({ theme }) => ({
   },
 }));
 export const SearchIconWrapper = styled("div")(({ theme }) => ({
+  zIndex: "1",
   padding: theme.spacing(0, 2),
   height: "100%",
   position: "absolute",
-  pointerEvents: "none",
+  // pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  cursor: "pointer",
 }));
 export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",

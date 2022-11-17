@@ -32,27 +32,44 @@ import { dispatch, RootState } from "configStore";
 import { logout } from "Slices/authSlice";
 import { useSelector } from "react-redux";
 import { getUserDetail } from "Slices/userDetailSlice";
+import { changeKey } from "Slices/searchSlice";
 type Props = {
   courseCatalogs: CourseCatalog[];
 };
 const Header = ({ courseCatalogs }: Props) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
   const name = useSelector(
     (state: RootState) => state.userDetail.userDetail?.hoTen
   );
-  const navigate = useNavigate();
-  const handleClick = (catalogID: string) => {
-    navigate(`course-list/${catalogID}`);
-  };
-  const handleLogout = () => {
-    dispatch(logout());
-  };
   useEffect(() => {
     dispatch(getUserDetail());
   }, []);
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
-  // ...menu...
+  // --------- SearchKey ---------
+  const [searchKey, setSearchKey] = useState<string>("");
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setSearchKey(event.target.value);
+  };
+  const enterPressed = (event: React.KeyboardEvent) => {
+    const code = event.code;
+    if (code === "Enter") {
+      navigate("/search-page");
+    }
+  };
+  useEffect(() => {
+    const timer = setTimeout(() => dispatch(changeKey(searchKey)), 300);
+    return () => clearTimeout(timer);
+  }, [searchKey]);
+  // --------- SearchKey ---------
+
+  // --------- Menu ---------
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -101,26 +118,26 @@ const Header = ({ courseCatalogs }: Props) => {
     >
       {user ? (
         <div>
-          <MenuItem onClick={() => handleMenuClose("Profile")}>
-            Profile
-          </MenuItem>
+          <MenuItem onClick={() => handleMenuClose("Profile")}>Hồ sơ</MenuItem>
           <MenuItem onClick={() => handleMenuClose("Log Out")}>
-            Log Out
+            Đăng xuất
           </MenuItem>
         </div>
       ) : (
         <div>
-          <MenuItem onClick={() => handleMenuClose("Log In")}>Log In</MenuItem>
+          <MenuItem onClick={() => handleMenuClose("Log In")}>
+            Đăng nhập
+          </MenuItem>
           <MenuItem onClick={() => handleMenuClose("Register")}>
-            Register
+            Đăng ký
           </MenuItem>
         </div>
       )}
     </Menu>
   );
-  // ...menu...
+  // --------- Menu ---------
 
-  // ...drawer...
+  // --------- Drawer ---------
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -134,6 +151,9 @@ const Header = ({ courseCatalogs }: Props) => {
 
       setIsDrawerOpen(open);
     };
+  const handleClick = (catalogID: string) => {
+    navigate(`course-list/${catalogID}`);
+  };
   const list = (
     <Box
       sx={{ width: 250 }}
@@ -165,7 +185,7 @@ const Header = ({ courseCatalogs }: Props) => {
       </List>
     </Box>
   );
-  // ...drawer...
+  // --------- Drawer ---------
 
   return (
     <>
@@ -185,7 +205,7 @@ const Header = ({ courseCatalogs }: Props) => {
             <Typography
               sx={{ marginLeft: "10px", display: { xs: "none", md: "inline" } }}
             >
-              Course List
+              Danh sách khóa học
             </Typography>
           </IconButton>
           <Typography
@@ -203,10 +223,14 @@ const Header = ({ courseCatalogs }: Props) => {
             E-learning
           </Typography>
           <Search>
-            <SearchIconWrapper>
+            <SearchIconWrapper onClick={() => navigate("search-page")}>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" />
+            <StyledInputBase
+              placeholder="Tìm kiếm ..."
+              onChange={(event) => handleChange(event)}
+              onKeyDown={(event) => enterPressed(event)}
+            />
           </Search>
           {/* Showed for big screen,  not logged in*/}
           <Box
@@ -216,10 +240,10 @@ const Header = ({ courseCatalogs }: Props) => {
             }}
           >
             <StyledButton color="inherit" onClick={() => navigate("/login")}>
-              Log In
+              Đăng nhập
             </StyledButton>
             <StyledButton color="inherit" onClick={() => navigate("/register")}>
-              Register
+              Đăng ký
             </StyledButton>
           </Box>
           {/* Showed for big screen, logged in*/}
@@ -239,7 +263,7 @@ const Header = ({ courseCatalogs }: Props) => {
             </StyledButton>
             <StyledButton color="inherit" onClick={handleLogout}>
               <PowerSettingsNewIcon sx={{ marginRight: "5px" }} />
-              Log Out
+              Đăng xuất
             </StyledButton>
           </Box>
           {/* Showed for small screen */}

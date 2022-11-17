@@ -33,4 +33,8 @@ export interface CourseState {
   courseCatalogs: CourseCatalog[];
   isCourseCatalogsLoading: boolean;
   courseCatalogsError: undefined | string;
+
+  courseList: CourseDetail[];
+  isCourseListLoading: boolean;
+  courseListError: undefined | string;
 }
