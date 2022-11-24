@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import SlickCourse from "Components/SlickCourse/SlickCourse";
 import Carousel from "./Carousel/Carousel";
 import Media from "./Media/Media";
